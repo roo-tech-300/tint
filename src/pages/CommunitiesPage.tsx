@@ -8,13 +8,13 @@ import BottomNav from '../components/common/BottomNavbar'
 import Loader from '../components/common/Loader'
 import type { Models } from 'appwrite'
 
-type Community = Models.Document & {
-  name: string
-  description?: string
-  coverImage?: string
-  admins?: string[]
-  communityMembers?: { userId: string }[]
-}
+// type Community = Models.Document & {
+//   name: string
+//   description?: string
+//   coverImage?: string
+//   admins?: string[]
+//   communityMembers?: { userId: string }[]
+// }
 
 const CommunitiesPage = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'following' | 'suggested'>('all')
@@ -28,7 +28,7 @@ const CommunitiesPage = () => {
   const [loadingCommunityId, setLoadingCommunityId] = useState<string | null>(null)
 
   const filteredCommunities = communities.filter((community) => {
-    const isFollowing = community.communityMembers?.some((m) => m.userId === user?.$id)
+    const isFollowing = community.communityMembers?.some((m : {userId: string}) => m.userId === user?.$id)
     if (activeTab === 'all') return true
     if (activeTab === 'following') return isFollowing
     if (activeTab === 'suggested') return !isFollowing
@@ -80,7 +80,7 @@ const CommunitiesPage = () => {
             <p className="text-gray-400">No communities found.</p>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredCommunities.map((community: Community) => {
+              {filteredCommunities.map((community: Models.Document) => {
                 const isFollowing = community.communityMembers?.some(
                   (member) => member.userId === user?.$id
                 )

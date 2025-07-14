@@ -10,7 +10,7 @@ import CreateCommunityPage from './pages/CreateCommunityPage'
 import PostDetailPage from './pages/PostDetailPage'
 import ProfilePage from './pages/ProfilePage'
 import NotFound from './pages/NotFound'
-import CreateCommunityPost from './pages/createCommunityPost'
+import CreateCommunityPost from './pages/CreateCommunityPost'
 
 import PrivateRoute from './components/common/PrivateRoute'
 import { AuthProvider } from './contexts/AuthContext'
