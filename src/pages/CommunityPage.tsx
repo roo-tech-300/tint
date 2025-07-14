@@ -55,17 +55,11 @@ const CommunityPage = () => {
         await unfollowCommunity({
           userId: user.$id,
           communityId: community.$id,
-          existingCommunityMembers: community.communityMembers.map(
-            (m: any) => m.$id
-          ),
         })
       } else {
         await followCommunity({
           userId: user.$id,
           communityId: community.$id,
-          existingCommunityMembers: community.communityMembers.map(
-            (m: any) => m.$id
-          ),
         })
       }
 

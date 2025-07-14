@@ -82,7 +82,7 @@ const CommunitiesPage = () => {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {filteredCommunities.map((community: Models.Document) => {
                 const isFollowing = community.communityMembers?.some(
-                  (member) => member.userId === user?.$id
+                  (member: {userId: string}) => member.userId === user?.$id
                 )
 
                 return (
