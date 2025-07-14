@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW 2019 (64-Bit) -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="4.3in" height="4.5in" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 4300 4500"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:#622E8A;stroke-width:166.67;stroke-miterlimit:2.61313}
+    .fil0 {fill:none}
+   ]]>
+  </style>
+   <clipPath id="id0">
+    <rect x="-25037.51" y="-10.48" width="15555.57" height="10366.33"/>
+   </clipPath>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <g style="clip-path:url(#id0)">
+   <image x="-25037.51" y="-10.49" width="15555.58" height="10366.33" xlink:href="Explore Icon_Images\Explore Icon_ImgID1.png"/>
+  </g>
+  <circle class="fil0 str0" cx="2101.38" cy="2214.19" r="1953.53"/>
+  <path class="fil0 str0" d="M3131.87 1141.35l-267.6 998.71c-71.32,266.14 -197.75,570.54 -395.22,684.55l-1027.23 593.08c-273.15,157.69 -435.27,57.53 -358.61,-207.05l298.4 -1135.17c48.85,-182.31 95.83,-314.4 224.36,-388.62l1235.39 -713.23c174.65,-100.84 332.01,12.9 290.52,167.72z"/>
+  <line class="fil0 str0" x1="1506.17" y1="1744.48" x2="2733.27" y2= "2501.31" />
+ </g>
+</svg>

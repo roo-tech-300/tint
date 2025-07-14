@@ -1,0 +1,46 @@
+import { Models } from "appwrite"
+import { Link } from "react-router-dom";
+
+
+type PostCardProps = {
+    post: Models.Document; 
+}
+
+const PostCard = ( {post }:PostCardProps ) => {
+  return (
+    <div className="post">
+        
+    <div className="creator-info flex flex-center ">
+        <Link to={'/profile/${post.creator.$id}'}>
+            <img src="{post?.creators?.imageUrl}" alt="" className='post-dp'/>  
+        </Link>
+        <div className="creator-info-text">
+            <h3 className='h3-semibold sm1regular-semibold flex-center gap-2'>
+                {post.creators.name}
+                <img src="../../../images/icons/verified badge.svg" alt="" className='verified-badge'/>
+            </h3>
+            <p className='text-left text-light-2 small-regular'>
+              {post.$createdAt}
+            </p>
+        </div>
+    </div>
+        <div className="caption">
+            {post.caption}
+        </div>
+        <div>
+            <img src="../../../images/MyDp.jpg" alt="" className='post-file'/>
+        </div>
+        <div className='post-info'>
+              <div className='flex-center gap-2'>
+                <img src="../../../images/icons/like icon.svg" alt="" className='post-reaction-icon'/>
+                <p className='small-regular text-light-2'>12k Likes</p> 
+              
+              </div>
+              <img src="../../../images/icons/comment icon.svg" alt="" className='post-reaction-icon'/>
+                
+        </div>            
+    </div>   
+    
+)}
+         
+ export default PostCard;

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW 2019 (64-Bit) -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="4.3in" height="4.5in" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 4300 4500"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:#622E8A;stroke-width:166.67;stroke-miterlimit:2.61313}
+    .fil0 {fill:none}
+   ]]>
+  </style>
+   <clipPath id="id0">
+    <rect x="22588.56" y="16413.52" width="17777.78" height="11847.22"/>
+   </clipPath>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <g style="clip-path:url(#id0)">
+   <image x="22588.56" y="16413.52" width="17777.78" height="11847.22" xlink:href="People Icon_Images\People Icon_ImgID1.png"/>
+  </g>
+  <path class="fil0 str0" d="M993.51 1933.45l911.31 0.06c637.68,1.14 932.94,458.86 954.25,1030.7l0.67 382.75c-0.2,175.44 -101.2,369.7 -338.33,369.64l-1948.71 -0.01c-206.43,-0.95 -437.11,-100.34 -435.22,-289.63l0 -458c0,-698.17 285.31,-1045.03 856.02,-1035.52z"/>
+  <circle class="fil0 str0" cx="1467.44" cy="956.65" r="578.7"/>
+  <circle class="fil0 str0" cx="3063.15" cy="1175.81" r="452.01"/>
+  <path class="fil0 str0" d="M2686.91 2081.84l605.69 -0.03c435.68,-1.19 824.56,235.94 823.23,668.54l-0.35 637.77c0.44,188.44 -44.99,341.79 -253.45,341.65l-673.86 0.03"/>
+ </g>
+</svg>
