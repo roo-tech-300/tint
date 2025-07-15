@@ -2,13 +2,13 @@ import { Link, useLocation } from 'react-router-dom'
 import { useUser, useLogout } from '../../hooks/useAuth'
 import { getUserById } from '../../lib/api'
 import { useEffect, useState } from 'react'
+import Loader from './Loader'
 
 const Sidebar = () => {
   const location = useLocation()
   const { data: user } = useUser()
-  const { mutateAsync: logout } = useLogout()
+  const { mutateAsync: logout, isPending: loggingOut } = useLogout()
   const [dbUser, setDbUser] = useState<any>(null)
-
 
   const handleLogout = async () => {
     try {
@@ -108,8 +108,17 @@ const Sidebar = () => {
         onClick={handleLogout}
         className="flex items-center gap-3 mt-20 px-3 py-2 text-white rounded-xl transition"
       >
-        <img src="../../../images/icons/Icons for tint.svg" alt="Logout" className="w-5 h-5" />
-        <span className="text-sm font-medium">Logout</span>
+        { loggingOut ?
+         <Loader/>
+        :
+       
+        (
+          <div>
+            <img src="../../../images/icons/Icons for tint.svg" alt="Logout" className="w-5 h-5" />
+            <span className="text-sm font-medium">Logout</span>
+          </div>)
+      }
+        
       </button>
     </aside>
   )

@@ -15,7 +15,6 @@ const CreateCommunity = () => {
   const [description, setDescription] = useState('')
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null)
   const [coverPreviewUrl, setCoverPreviewUrl] = useState('')
-  const [isDisabled, setIsDisabled] = useState(false)
 
   const handleImageChange = (file: File | null) => {
     if (!file) return
@@ -27,9 +26,7 @@ const CreateCommunity = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsDisabled(true)
-    setTimeout(() => setIsDisabled(false), 5000) // Enable after 5 seconds
-    if (!user || !name.trim()) return
+    if (isPending || !user || !name.trim()) return
 
     try {
       let coverImageId = ''
@@ -39,7 +36,7 @@ const CreateCommunity = () => {
         console.log('Cover image uploaded:', coverImageId)
       }
 
-      await createCommunity({
+       createCommunity({
         name: name.trim(),
         description: description.trim(),
         coverImage: coverImageId,
@@ -102,11 +99,11 @@ const CreateCommunity = () => {
 
         <button
           type="submit"
-          disabled={isDisabled || isPending}
+          disabled={isPending}
           className= {`w-full py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition 
-            ${isPending || isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+            ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-          {isPending || isDisabled ? <Loader/> : 'Create Community'}
+          {isPending ? <Loader/> : 'Create Community'}
         </button>
       </form>
     </div>

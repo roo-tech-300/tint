@@ -3,12 +3,14 @@ import { useEffect, useState } from 'react'
 import type { Models } from 'appwrite'
 
 import { useUser } from '../hooks/useAuth'
-import { getCommunityById } from '../lib/api'
+import { getCommunityById, makeUserAdmin } from '../lib/api'
 import {
   useFollowCommunity,
   useUnfollowCommunity,
 } from '../hooks/useCommunities'
 import Loader from '../components/common/Loader'
+import CommunityMembersModal from '../components/common/CommunityMembersModal'
+
 
 const CommunityPage = () => {
   const { id } = useParams()
@@ -17,6 +19,7 @@ const CommunityPage = () => {
   const { data: user } = useUser()
   const [community, setCommunity] = useState<Models.Document | null>(null)
   const [loading, setLoading] = useState(true)
+  const [showMembers, setShowMembers] = useState(false)
 
   const { mutateAsync: followCommunity, isPending: isJoining } =
     useFollowCommunity()
@@ -70,6 +73,16 @@ const CommunityPage = () => {
     }
   }
 
+  const handleMakeAdmin = async (userId: string) => {
+  try {
+    await makeUserAdmin(userId, community?.$id!)
+    loadCommunity()
+  } catch (error) {
+    console.error('Failed to make user admin:', error)
+  }
+}
+
+
   if (loading) {
     {/* Fixed Back Button */}
        <button
@@ -93,9 +106,15 @@ const CommunityPage = () => {
         {/* Fixed Back Button */}
         <button
         onClick={() => navigate('/communities')}
-        className="fixed top-4 left-4 bg-purple-600 text-white px-3 py-1 rounded-md text-sm font-semibold shadow hover:bg-purple-500 z-50 opacity-80"
+        className="fixed top-7 left-4 bg-purple-600 text-white px-3 py-1 rounded-md text-sm font-semibold shadow hover:bg-purple-500 z-50 opacity-80"
         >
         ← 
+        </button>
+        <button
+        className="fixed top-7 right-4 bg-purple-600 text-white px-3 py-1 rounded-md text-sm font-semibold shadow hover:bg-purple-500 z-50 opacity-80"
+        onClick={() => setShowMembers((prev) => !prev)}
+        >
+          {showMembers ? 'Hide Members' : 'Show Members'}
         </button>
 
       {/* Cover Image */}
@@ -150,11 +169,28 @@ const CommunityPage = () => {
           {/* TODO: Map actual community posts here */}
           <div className="bg-[#1a1a1a] p-4 rounded-md">
             <p className="text-sm text-gray-300">
-              This is a sample post in the community.
+              No posts yet
             </p>
           </div>
         </div>
       </div>
+      {showMembers && community && user?.$id && (
+        <CommunityMembersModal
+          isOpen={showMembers}
+          onClose={() => setShowMembers(false)}
+          members={
+            (community.communityMembers || []).map((member: any) => ({
+              user: member.user,
+              isAdmin: community.admins?.some((admin: any) => admin.$id === member.user?.$id)
+            }))
+          }
+          admins={community.admins?.map((admin: any) => admin.$id) || []}
+          currentUserId={user?.$id}
+          isCurrentUserAdmin={isAdmin}
+          handleMakeAdmin={handleMakeAdmin}
+        />  
+        )}
+
     </div>
   )
 }

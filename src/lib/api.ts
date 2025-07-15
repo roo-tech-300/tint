@@ -218,6 +218,8 @@ export const followCommunity = async ({ userId, communityId }: { userId: string;
     {
       user: userId,
       community: communityId,
+      userId: userId,
+      communitiesId: communityId
     }
   )
 }
@@ -260,6 +262,37 @@ export const fetchCommunityMemberIds = async (communityId: string): Promise<stri
   )
   return res.documents.map((m) => m.user as string)
 }
+
+export const makeUserAdmin = async (userId: string, communityId: string) => {
+  try {
+
+    const community = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.communitiesCollectionId,
+      communityId
+    )
+
+    const currentAdmins: string[] = community.admins || []
+
+    const updatedAdmins = currentAdmins.includes(userId)
+    ? currentAdmins
+    : [...currentAdmins, userId]
+
+    await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.communitiesCollectionId,
+      communityId,
+      {
+        admins: updatedAdmins, 
+      }
+    )
+  } catch (error) {
+    console.error('Failed to make user admin:', error)
+    throw error
+  }
+}
+
+
 
 
 

@@ -1,11 +1,19 @@
 // hooks/useCommunities.ts
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createCommunity, fetchCommunities, followCommunity, unfollowCommunity } from '../lib/api'
+import { createCommunity, fetchCommunities, followCommunity, makeUserAdmin, unfollowCommunity } from '../lib/api'
+import { useNavigate } from 'react-router-dom'
 
 export const useCreateCommunity = () => {
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+
   return useMutation({
     mutationFn: createCommunity,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['communities']})
+      navigate('/communities')
+    }
   })
 }
 
@@ -81,6 +89,18 @@ export const useUnfollowCommunity = () => {
       }
     },
     onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['communities'] })
+    },
+  })
+}
+
+export const useMakeAdmin = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ userId, communityId }: { userId: string; communityId: string }) =>
+      makeUserAdmin(userId, communityId), // unwrap the object here to fit the original function
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communities'] })
     },
   })
