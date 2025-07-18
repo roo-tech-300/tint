@@ -154,7 +154,7 @@ export const getUserAvatar = async (userId: string): Promise<string> => {
 }
 
 
-export const createCommunity = async ({
+export const createCommunity = async ({ 
   name,
   description,
   coverImage,
@@ -183,6 +183,8 @@ export const createCommunity = async ({
     appwriteConfig.communityMembersCollectionId,
     ID.unique(),
     {
+      userId: adminId,
+      communitiesId: community.$id,
       user: adminId,
       community: community.$id,
     }

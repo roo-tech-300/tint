@@ -11,6 +11,7 @@ export const useCreateCommunity = () => {
   return useMutation({
     mutationFn: createCommunity,
     onSuccess: () => {
+      console.log("Done mates")
       queryClient.invalidateQueries({queryKey: ['communities']})
       navigate('/communities')
     }

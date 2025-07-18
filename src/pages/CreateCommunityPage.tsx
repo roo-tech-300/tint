@@ -8,7 +8,6 @@ import Loader from '../components/common/Loader'
 
 const CreateCommunity = () => {
   const { data: user } = useUser()
-  const navigate = useNavigate()
   const { mutateAsync: createCommunity, isPending } = useCreateCommunity()
 
   const [name, setName] = useState('')
@@ -36,7 +35,7 @@ const CreateCommunity = () => {
         console.log('Cover image uploaded:', coverImageId)
       }
 
-       createCommunity({
+       await createCommunity({
         name: name.trim(),
         description: description.trim(),
         coverImage: coverImageId,
@@ -44,8 +43,7 @@ const CreateCommunity = () => {
       })
 
       console.log('Community created successfully')
-      // Redirect to communities page after successful creation
-      navigate('/communities')
+
     } catch (err) {
       console.error('Failed to create community:', err)
     }
