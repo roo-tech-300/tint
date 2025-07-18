@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useUser } from '../hooks/useAuth'
 import { useCreateCommunity } from '../hooks/useCommunities'
 import { avatarUploadStorage } from '../lib/api'

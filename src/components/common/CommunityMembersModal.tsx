@@ -17,7 +17,6 @@ type Props = {
 };
 
 
-
 const CommunityMembersModal = ({
   isOpen,
   onClose,
@@ -94,7 +93,7 @@ const CommunityMembersModal = ({
                       {isCurrentUserAdmin && !isAdmin && user.$id !== currentUserId && (
                         <button
                           onClick={() => handleMakeAdmin(user.$id)}
-                          className="text-xs font-medium text-white border border-purple-400 bg-purple-400 px-3 py-1 rounded hover:bg-purple-500 hover:text-white transition"
+                          className="text-xs font-medium text-white bg-purple-500 px-3 py-2 rounded hover:bg-purple-400 hover:text-white transition"
                         >
                           Make Admin
                         </button>

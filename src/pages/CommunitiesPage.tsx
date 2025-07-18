@@ -7,6 +7,7 @@ import Sidebar from '../components/common/SideBar'
 import BottomNav from '../components/common/BottomNavbar'
 import Loader from '../components/common/Loader'
 import type { Models } from 'appwrite'
+import { removeUserAdmin } from '../lib/api'
 
 // type Community = Models.Document & {
 //   name: string
@@ -134,11 +135,24 @@ const CommunitiesPage = () => {
                           setLoadingCommunityId(community.$id)
                           try {
                             if (isFollowing) {
-                              await unfollowCommunity({
-                                communityId: community.$id,
-                                userId: user.$id,
-                              })
-                            } else {
+                            const isAdmin = community.admins?.some((admin: { $id: string }) => admin.$id === user.$id)
+                            const adminCount = community.admins?.length || 0
+
+                            console.log("This is the admin and the admin count", community.admins, user.$id )
+                            if (isAdmin && adminCount === 1) {
+                              alert("You are the last admin of this community. Assign another admin before leaving.")
+                              return
+                            }
+
+                            console.log("Removve user as admin omo men")
+                            await removeUserAdmin(user.$id, community?.$id!)
+
+                            console.log("Unfolllowing")
+                            await unfollowCommunity({
+                              communityId: community.$id,
+                              userId: user.$id,
+                            })
+                          }else {
                               await followCommunity({
                                 communityId: community.$id,
                                 userId: user.$id,

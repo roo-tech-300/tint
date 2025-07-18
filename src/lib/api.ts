@@ -294,14 +294,35 @@ export const makeUserAdmin = async (userId: string, communityId: string) => {
   }
 }
 
+export const removeUserAdmin = async (userId: string, communityId: string) => {
+  try {
+    // 1. Get the current community document
+    const community = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.communitiesCollectionId,
+      communityId
+    );
 
+    // 2. Extract only the $id from the relationship objects
+    const updatedAdmins = (community.admins || [])
+      .map((admin: any) => admin?.$id)
+      .filter((id: string) => id !== userId);
 
+    console.log("Updated admins list:", updatedAdmins);
 
+    // 3. Update the community with the new list of admin IDs
+    const updatedCommunity = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.communitiesCollectionId,
+      communityId,
+      {
+        admins: updatedAdmins,
+      }
+    );
 
-
-
-
-
-
-
-
+    return updatedCommunity;
+  } catch (error) {
+    console.error("Failed to remove user as admin:", error);
+    throw error;
+  }
+};

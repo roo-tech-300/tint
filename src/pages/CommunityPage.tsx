@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react'
 import type { Models } from 'appwrite'
 
 import { useUser } from '../hooks/useAuth'
-import { getCommunityById, makeUserAdmin } from '../lib/api'
+import { getCommunityById, makeUserAdmin, removeUserAdmin } from '../lib/api'
 import {
   useFollowCommunity,
   useUnfollowCommunity,
 } from '../hooks/useCommunities'
 import Loader from '../components/common/Loader'
 import CommunityMembersModal from '../components/common/CommunityMembersModal'
+import EventModal from '../components/common/eventModal'
 
 
 const CommunityPage = () => {
@@ -20,6 +21,9 @@ const CommunityPage = () => {
   const [community, setCommunity] = useState<Models.Document | null>(null)
   const [loading, setLoading] = useState(true)
   const [showMembers, setShowMembers] = useState(false)
+  const [showEventsModal, setShowEventsModal] = useState(false);
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false)
+  const [events, setEvents] = useState<any[]>([])
 
   const { mutateAsync: followCommunity, isPending: isJoining } =
     useFollowCommunity()
@@ -50,28 +54,45 @@ const CommunityPage = () => {
     (member: any) => member?.userId === user?.$id
   )
 
-  const handleToggleFollow = async () => {
-    if (!user || !community) return
+const handleToggleFollow = async () => {
+  if (!user || !community) return;
 
-    try {
-      if (isFollowing) {
-        await unfollowCommunity({
-          userId: user.$id,
-          communityId: community.$id,
-        })
-      } else {
-        await followCommunity({
-          userId: user.$id,
-          communityId: community.$id,
-        })
+  setLoading(true); // Optional: gives quick feedback
+  try {
+    const isAdmin = community.admins?.some((admin: { $id: string }) => admin.$id === user.$id);
+    const adminCount = community.admins?.length || 0;
+
+    if (isFollowing) {
+      if (isAdmin && adminCount === 1) {
+        alert("You are the last admin of this community. Assign another admin before leaving.");
+        return;
       }
 
-      // Refetch updated data
-      loadCommunity()
-    } catch (err) {
-      console.error('Follow/unfollow failed:', err)
+      if (isAdmin) {
+        await removeUserAdmin(user.$id, community.$id);
+      }
+
+      await unfollowCommunity({
+        userId: user.$id,
+        communityId: community.$id,
+      });
+
+    } else {
+      await followCommunity({
+        userId: user.$id,
+        communityId: community.$id,
+      });
     }
+
+    await loadCommunity(); // Refresh data
+
+  } catch (err) {
+    console.error('Follow/unfollow failed:', err);
+  } finally {
+    setLoading(false);
   }
+};
+
 
   const handleMakeAdmin = async (userId: string) => {
   try {
@@ -133,7 +154,7 @@ const CommunityPage = () => {
       </div>
 
       {/* Actions */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex gap-3 items-center mb-6">
         {isAdmin ? (
           <button
             onClick={() => navigate(`/communities/${id}/create-post`)}
@@ -160,7 +181,19 @@ const CommunityPage = () => {
               : 'Join Community'}
           </button>
         )}
+
+
+        <button
+          onClick={() => setIsEventModalOpen(true)}
+          className="px-4 py-2 text-sm rounded-md bg-purple-600 text-white hover:bg-purple-700"
+        >
+          {events.length > 0 ? `${events.length} Events` : 'Event'}
+        </button>
       </div>
+
+      
+
+      
 
       {/* Posts Feed */}
       <div>
@@ -190,7 +223,13 @@ const CommunityPage = () => {
           handleMakeAdmin={handleMakeAdmin}
         />  
         )}
-
+        {isEventModalOpen && (
+          <EventModal
+            isOpen={isEventModalOpen}
+            onClose={() => setIsEventModalOpen(false)}
+            events={events}
+          />  
+        )}
     </div>
   )
 }
