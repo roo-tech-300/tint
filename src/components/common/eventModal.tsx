@@ -9,9 +9,12 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   events: Event[];
+  isAdmin?: boolean;
+  onCreateEvent?: () => void;
 };
 
-const EventModal = ({ isOpen, onClose, events }: Props) => {
+
+const EventModal = ({ isOpen, onClose, events, isAdmin, onCreateEvent }: Props) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -46,12 +49,22 @@ const EventModal = ({ isOpen, onClose, events }: Props) => {
                   <Dialog.Title className="text-lg font-semibold">
                     Upcoming Events
                   </Dialog.Title>
-                  <button
-                    onClick={onClose}
-                    className="text-lg font-semibold px-4 py-2 hover:opacity-70 transition"
-                  >
-                    ✕
-                  </button>
+                   <div className="flex items-center gap-2">
+                    {isAdmin && (
+                      <button 
+                        onClick={onCreateEvent}
+                        className="bg-purple-600 hover:bg-purple-700 px-3 py-1 text-sm rounded-md font-medium"
+                      >
+                        + Create Event
+                      </button>
+                    )}
+                    <button
+                      onClick={onClose}
+                      className="text-lg font-semibold px-3 py-1 hover:opacity-70 transition"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 </div>
 
                 {/* Events List */}

@@ -46,9 +46,8 @@ const CommunityPage = () => {
     loadCommunity()
   }, [id])
 
-  const isAdmin = community?.admins?.some(
-    (admin: any) => admin?.$id === user?.$id
-  )
+ 
+
 
   const isFollowing = community?.communityMembers?.some(
     (member: any) => member?.userId === user?.$id
@@ -57,9 +56,10 @@ const CommunityPage = () => {
 const handleToggleFollow = async () => {
   if (!user || !community) return;
 
-  setLoading(true); // Optional: gives quick feedback
   try {
-    const isAdmin = community.admins?.some((admin: { $id: string }) => admin.$id === user.$id);
+    const isAdmin = community.admins?.some(
+      (admin: { $id: string }) => admin.$id === user.$id
+    );
     const adminCount = community.admins?.length || 0;
 
     if (isFollowing) {
@@ -84,14 +84,13 @@ const handleToggleFollow = async () => {
       });
     }
 
-    await loadCommunity(); // Refresh data
+    await loadCommunity(); // Refresh community data
 
   } catch (err) {
     console.error('Follow/unfollow failed:', err);
-  } finally {
-    setLoading(false);
   }
 };
+
 
 
   const handleMakeAdmin = async (userId: string) => {
@@ -121,6 +120,10 @@ const handleToggleFollow = async () => {
       <p className="text-red-500 text-center mt-10">Community not found.</p>
     )
   }
+
+  const isAdmin = !!community?.admins?.some(
+  (admin: any) => admin?.$id === user?.$id
+)
 
   return (
     <div className="min-h-screen bg-black text-white px-4 py-6">
@@ -228,7 +231,12 @@ const handleToggleFollow = async () => {
             isOpen={isEventModalOpen}
             onClose={() => setIsEventModalOpen(false)}
             events={events}
-          />  
+            isAdmin={isAdmin}
+            onCreateEvent={() => {
+              console.log("Open event creation form here");
+              // You could navigate or open another modal
+          }}
+/> 
         )}
     </div>
   )
