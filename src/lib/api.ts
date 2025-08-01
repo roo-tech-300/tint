@@ -326,3 +326,18 @@ export const removeUserAdmin = async (userId: string, communityId: string) => {
     throw error;
   }
 };
+
+
+export const listEventsForCommunity = async (communityId: string) => {
+  try {
+    const response = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.eventsCollectionId, 
+      [Query.equal('communities', communityId), Query.orderAsc('startDate')]
+    )
+    return response.documents
+  } catch (error) {
+    console.error('Failed to list events:', error)
+    throw error
+  }
+} 

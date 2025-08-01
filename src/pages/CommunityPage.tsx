@@ -5,12 +5,14 @@ import type { Models } from 'appwrite'
 import { useUser } from '../hooks/useAuth'
 import { getCommunityById, makeUserAdmin, removeUserAdmin } from '../lib/api'
 import {
+  useCommunityEvents,
   useFollowCommunity,
   useUnfollowCommunity,
 } from '../hooks/useCommunities'
 import Loader from '../components/common/Loader'
 import CommunityMembersModal from '../components/common/CommunityMembersModal'
 import EventModal from '../components/common/eventModal'
+import CreateEventModal from '../components/common/CreateEventModal'
 
 
 const CommunityPage = () => {
@@ -18,12 +20,12 @@ const CommunityPage = () => {
   const navigate = useNavigate()
 
   const { data: user } = useUser()
+  const { data: eventsData, isLoading: isEventsLoading, refetch: refetchEvents } = useCommunityEvents(id!);
   const [community, setCommunity] = useState<Models.Document | null>(null)
   const [loading, setLoading] = useState(true)
   const [showMembers, setShowMembers] = useState(false)
-  const [showEventsModal, setShowEventsModal] = useState(false);
   const [isEventModalOpen, setIsEventModalOpen] = useState(false)
-  const [events, setEvents] = useState<any[]>([])
+  const [isCreateEventModalOpen, setIsCreateEventModalOpen] = useState<boolean>(false)
 
   const { mutateAsync: followCommunity, isPending: isJoining } =
     useFollowCommunity()
@@ -46,7 +48,12 @@ const CommunityPage = () => {
     loadCommunity()
   }, [id])
 
- 
+  useEffect(() => {
+    if (isCreateEventModalOpen) {
+      setIsEventModalOpen(false)
+    }
+  }, [isCreateEventModalOpen])
+
 
 
   const isFollowing = community?.communityMembers?.some(
@@ -190,9 +197,11 @@ const handleToggleFollow = async () => {
           onClick={() => setIsEventModalOpen(true)}
           className="px-4 py-2 text-sm rounded-md bg-purple-600 text-white hover:bg-purple-700"
         >
-          {events.length > 0 ? `${events.length} Events` : 'Event'}
+          {eventsData && eventsData.length > 0
+            ? `${eventsData.length} Events`
+            : 'Event'}
         </button>
-      </div>
+      </div>  
 
       
 
@@ -226,18 +235,38 @@ const handleToggleFollow = async () => {
           handleMakeAdmin={handleMakeAdmin}
         />  
         )}
-        {isEventModalOpen && (
-          <EventModal
-            isOpen={isEventModalOpen}
-            onClose={() => setIsEventModalOpen(false)}
-            events={events}
-            isAdmin={isAdmin}
-            onCreateEvent={() => {
-              console.log("Open event creation form here");
-              // You could navigate or open another modal
+       {isEventModalOpen && (
+        <EventModal
+          isOpen={isEventModalOpen}
+          onClose={() => setIsEventModalOpen(false)}
+          events={eventsData || []}
+          isAdmin={isAdmin}
+          onCreateEvent={() => {
+            setIsCreateEventModalOpen(true)
           }}
-/> 
-        )}
+          isEventsLoading={isEventsLoading}
+        />
+      )}
+      {isCreateEventModalOpen && (
+        
+        <CreateEventModal
+          isOpen={isCreateEventModalOpen}
+          onClose={() => {
+            setIsCreateEventModalOpen(false);
+            setIsEventModalOpen(true); // reopen event modal
+          }}
+          communityId={community?.$id}
+          onCreateEvent={() => {
+            setIsCreateEventModalOpen(false);
+          }}
+          onEventCreated={async () => {
+            await refetchEvents();
+            setIsCreateEventModalOpen(false);
+          }}
+        />
+        
+      )}
+
     </div>
   )
 }

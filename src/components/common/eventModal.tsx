@@ -1,7 +1,9 @@
+
 // components/EventModal.tsx
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import type { Models } from "appwrite";
+import Loader from "./Loader";
 
 type Event = Models.Document;
 
@@ -11,10 +13,37 @@ type Props = {
   events: Event[];
   isAdmin?: boolean;
   onCreateEvent?: () => void;
+  isEventsLoading?: boolean;
 };
 
 
-const EventModal = ({ isOpen, onClose, events, isAdmin, onCreateEvent }: Props) => {
+
+
+const formatEventDate = (start: string, end: string) => {
+  const s = new Date(start);
+  const e = new Date(end);
+
+  const sameDay = s.toDateString() === e.toDateString();
+
+  const formatTime = (date: Date) =>
+    date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  const formatDate = (date: Date) =>
+    date.toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' });
+
+  return sameDay
+    ? `${formatDate(s)} • ${formatTime(s)} - ${formatTime(e)}`
+    : `${formatDate(s)} ${formatTime(s)} → ${formatDate(e)} ${formatTime(e)}`;
+};
+
+const EventModal = ({ isOpen, onClose, events, isAdmin, onCreateEvent, isEventsLoading }: Props) => {
+    if (isEventsLoading) {
+        return (
+        <div className="flex items-center justify-center h-full">
+            <Loader />
+        </div>
+        );
+    }
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -74,19 +103,24 @@ const EventModal = ({ isOpen, onClose, events, isAdmin, onCreateEvent }: Props) 
                       <div
                         key={event.$id}
                         className="bg-zinc-800 p-4 rounded-lg flex flex-col space-y-1"
-                      >
+                        >
                         <span className="text-base font-medium">
-                          {event.title}
+                            {event.title}
                         </span>
-                        <span className="text-sm text-zinc-400">
-                          {event.date}
-                        </span>
-                        {event.description && (
-                          <span className="text-sm text-zinc-300">
-                            {event.description}
-                          </span>
+
+                        {event.startDate && event.endDate && (
+                            <span className="text-sm text-zinc-400">
+                            {formatEventDate(event.startDate, event.endDate)}
+                            </span>
                         )}
-                      </div>
+
+                        {event.description && (
+                            <span className="text-sm text-zinc-300">
+                            {event.description}
+                            </span>
+                        )}
+                        </div>
+
                     ))
                   ) : (
                     <p className="text-sm text-zinc-400">

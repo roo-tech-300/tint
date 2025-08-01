@@ -1,7 +1,7 @@
 // hooks/useCommunities.ts
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createCommunity, fetchCommunities, followCommunity, makeUserAdmin, unfollowCommunity } from '../lib/api'
+import { createCommunity, fetchCommunities, followCommunity, listEventsForCommunity, makeUserAdmin, unfollowCommunity } from '../lib/api'
 import { useNavigate } from 'react-router-dom'
 
 export const useCreateCommunity = () => {
@@ -104,5 +104,13 @@ export const useMakeAdmin = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communities'] })
     },
+  })
+}
+
+export const useCommunityEvents = (communityId: string) => {
+  return useQuery({
+    queryKey: ['events', communityId],
+    queryFn: async () => listEventsForCommunity(communityId),
+    enabled: !!communityId,
   })
 }

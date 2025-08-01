@@ -81,6 +81,8 @@ const LoginPage = () => {
           Log in to explore your campus communities.
         </p>
 
+        <img src="../../images/icons/Edit Post Icon.svg" alt="Omo men" className='h-20'/>
+
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label className="block text-sm text-white mb-1">Email</label>
