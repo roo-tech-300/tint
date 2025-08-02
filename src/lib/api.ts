@@ -333,7 +333,7 @@ export const listEventsForCommunity = async (communityId: string) => {
     const response = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.eventsCollectionId, 
-      [Query.equal('communities', communityId), Query.orderAsc('startDate')]
+      [Query.equal('communityId', communityId), Query.orderAsc('startDate')]
     )
     return response.documents
   } catch (error) {
@@ -341,3 +341,43 @@ export const listEventsForCommunity = async (communityId: string) => {
     throw error
   }
 } 
+
+export const createEvent = async ({
+  communityId,
+  title,
+  description,
+  startDate,
+  endDate,
+  frequency,
+}: {
+  communityId: string;
+  title: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  frequency: "once" | "daily" | "weekly" | "monthly";
+}) => {
+  // Backend-side validation (optional but recommended)
+  const now = new Date();
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (start < now) throw new Error("Start time must be in the future.");
+  if (end < start) throw new Error("End time must be after start time.");
+
+  const res = await databases.createDocument(
+    appwriteConfig.databaseId,
+    appwriteConfig.eventsCollectionId,
+    ID.unique(),
+    {
+      communityId,
+      title,
+      description,
+      startDate,
+      endDate,
+      frequency,
+    }
+  );
+
+  return res;
+};

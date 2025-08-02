@@ -119,7 +119,7 @@ const handleToggleFollow = async () => {
         ← 
         </button>
 
-    return <p className="text-white text-center mt-10"><Loader/></p>
+    return <div className="text-white text-center mt-10"><Loader/></div>
   }
 
   if (!community) {
@@ -256,12 +256,10 @@ const handleToggleFollow = async () => {
             setIsEventModalOpen(true); // reopen event modal
           }}
           communityId={community?.$id}
-          onCreateEvent={() => {
+          onCreateEvent={ async () => {
             setIsCreateEventModalOpen(false);
-          }}
-          onEventCreated={async () => {
             await refetchEvents();
-            setIsCreateEventModalOpen(false);
+
           }}
         />
         
